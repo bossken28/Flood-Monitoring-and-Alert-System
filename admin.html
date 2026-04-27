@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Brgy. Mamatid Flood System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root{--mamatid-blue:#0d47a1;--mamatid-gold:#ffc107;--mamatid-dark:#0a3d91;--success:#2e7d32;--warning:#f57c00;--danger:#c62828}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#e3f2fd 0%,#f0f4f8 100%);min-height:100vh}
+   .login-screen{background:linear-gradient(135deg,var(--mamatid-blue),var(--mamatid-dark));display:flex;justify-content:center;align-items:center;min-height:100vh;width:100%;position:fixed;top:0;left:0;z-index:999;overflow:hidden}
+   .login-screen::before{content:'';position:absolute;width:600px;height:600px;background:rgba(255,193,7,0.1);border-radius:50%;top:-20%;right:-10%;animation:float 6s ease-in-out infinite}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+   .login-box{background:rgba(255,255,255,0.98);backdrop-filter:blur(20px);padding:50px;border-radius:24px;width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.5);position:relative;z-index:1}
+   .login-box h2{text-align:center;color:var(--mamatid-blue);margin-bottom:10px;font-weight:800;font-size:1.8rem}
+   .login-box p{text-align:center;color:#666;font-size:0.95rem;margin-bottom:30px}
+   .input-group{position:relative;margin:15px 0}
+   .input-group i{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--mamatid-blue)}
+        input,textarea,select{width:100%;padding:16px 16px 16px 50px;margin:0;border:2px solid #e0e0e0;border-radius:12px;box-sizing:border-box;font-family:'Poppins';transition:0.3s}
+        input:focus,textarea:focus,select:focus{border-color:var(--mamatid-blue);outline:none;box-shadow:0 0 0 4px rgba(13,71,161,0.1)}
+        textarea,select{padding:16px}
+        button{width:100%;padding:16px;background:linear-gradient(135deg,var(--mamatid-blue),var(--mamatid-dark));color:white;border:none;border-radius:12px;font-size:1.05rem;cursor:pointer;margin-top:20px;font-weight:700;transition:0.3s;box-shadow:0 6px 20px rgba(13,71,161,0.3)}
+        button:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(13,71,161,0.4)}
+   .dashboard{display:none;min-height:100vh;width:100%}
+   .header{background:linear-gradient(135deg,var(--mamatid-blue),var(--mamatid-dark));color:white;padding:20px 25px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 32px rgba(13,71,161,0.3)}
+   .header h1{font-size:1.5rem;font-weight:800}
+   .logout-btn{background:var(--danger);color:white;border:none;padding:12px 24px;border-radius:10px;cursor:pointer;font-weight:700;width:auto;margin:0;box-shadow:0 4px 12px rgba(198,40,40,0.3)}
+   .container{max-width:1200px;margin:30px auto;padding:0 25px}
+   .card{background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-radius:20px;padding:30px;box-shadow:0 8px 32px rgba(0,0,0,0.08);margin-bottom:25px;border:1px solid rgba(255,255,255,0.5)}
+   .card h3{color:var(--mamatid-blue);margin-bottom:20px;font-size:1.4rem;font-weight:700;display:flex;align-items:center;gap:12px}
+   .card h3 i{color:var(--mamatid-gold)}
+   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+   .control-btn{background:linear-gradient(135deg,var(--mamatid-blue),var(--mamatid-dark));color:white;border:none;padding:18px;border-radius:14px;cursor:pointer;font-size:1rem;font-weight:700;transition:0.3s;width:100%;box-shadow:0 4px 16px rgba(13,71,161,0.25)}
+   .control-btn:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(13,71,161,0.35)}
+   .control-btn i{margin-right:8px}
+   .btn-danger{background:linear-gradient(135deg,#c62828,#e53935);box-shadow:0 4px 16px rgba(198,40,40,0.25)}
+   .btn-success{background:linear-gradient(135deg,#2e7d32,#43a047);box-shadow:0 4px 16px rgba(46,125,50,0.25)}
+   .btn-warning{background:linear-gradient(135deg,#f57c00,#ffa000);box-shadow:0 4px 16px rgba(245,124,0,0.25)}
+   .stat-box{background:linear-gradient(135deg,#ffffff,#f8f9fa);padding:25px;border-radius:16px;text-align:center;border:2px solid var(--mamatid-gold);box-shadow:0 6px 20px rgba(0,0,0,0.06);transition:0.3s}
+   .stat-box:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(0,0,0,0.1)}
+   .stat-box p{color:#666;font-weight:600;font-size:0.9rem;text-transform:uppercase;letter-spacing:1px}
+   .stat-box h4{color:var(--mamatid-blue);font-size:2.5rem;margin:15px 0;font-weight:800}
+        table{width:100%;border-collapse:collapse;margin-top:20px;border-radius:12px;overflow:hidden}
+        th,td{padding:15px;text-align:left;border-bottom:1px solid #eee}
+        th{background:linear-gradient(135deg,var(--mamatid-blue),var(--mamatid-dark));color:white;font-weight:700}
+        tr:hover{background:#f8f9fa}
+   .tabs{display:flex;gap:12px;margin-bottom:25px;border-bottom:3px solid #eee;flex-wrap:wrap}
+   .tab{padding:14px 28px;cursor:pointer;border-bottom:4px solid transparent;font-weight:700;transition:0.3s;border-radius:8px 8px 0 0}
+   .tab:hover{background:#f5f5f5}
+   .tab.active{border-bottom-color:var(--mamatid-blue);color:var(--mamatid-blue);background:rgba(13,71,161,0.05)}
+   .tab-content{display:none}.tab-content.active{display:block;animation:fadeIn 0.3s ease}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+   .error{color:var(--danger);text-align:center;margin-top:12px;font-size:0.9rem;min-height:22px;font-weight:600}
+   .footer-mini{background:rgba(13,71,161,0.05);padding:20px;border-radius:12px;margin-top:30px;text-align:center}
+   .footer-mini h5{color:var(--mamatid-blue);margin-bottom:10px;font-size:1rem}
+   .dev-names{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:10px}
+   .dev-names span{background:white;padding:8px 16px;border-radius:20px;font-size:0.85rem;font-weight:600;color:var(--mamatid-blue);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+   .alert-box{background:linear-gradient(135deg,#fff3cd,#fff8e1);border-left:5px solid var(--warning);padding:18px;border-radius:12px;margin:15px 0}
+   .alert-box i{color:var(--warning);margin-right:10px}
+    </style>
+</head>
+<body>
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <h2><i class="fas fa-water"></i> FLOOD ADMIN</h2>
+            <p>Brgy. Mamatid Flood Monitoring System</p>
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" placeholder="Username" value="admin">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-key"></i>
+                <input type="password" id="password" placeholder="Password" value="mamatid2026">
+            </div>
+            <button onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Mag-Login</button>
+            <div class="error" id="error"></div>
+            <p style="text-align:center;margin-top:25px;font-size:0.85rem"><a href="index.html" style="color:var(--mamatid-blue);font-weight:600">← Bumalik sa Public View</a></p>
+        </div>
+    </div>
+
+    <div class="dashboard" id="dashboard">
+        <div class="header">
+            <div><h1><i class="fas fa-water"></i> FLOOD MONITORING ADMIN</h1></div>
+            <button class="logout-btn" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+        <div class="container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab(0)"><i class="fas fa-chart-line"></i> Dashboard</div>
+                <div class="tab" onclick="showTab(1)"><i class="fas fa-comment-sms"></i> SMS Blast</div>
+                <div class="tab" onclick="showTab(2)"><i class="fas fa-sliders"></i> Flood Control</div>
+                <div class="tab" onclick="showTab(3)"><i class="fas fa-file-lines"></i> Logs</div>
+            </div>
+
+                <div class="grid">
+                    <div class="stat-box">
+                        <p><i class="fas fa-water"></i> Water Level</p>
+                        <h4 id="currentLevel">0 cm</h4>
+                    </div>
+                    <div class="stat-box">
+                        <p><i class="fas fa-signal"></i> Sensor Status</p>
+                        <h4 id="sysStatus" style="color:#2e7d32">Online</h4>
+                    </div>
+                    <div class="stat-box">
+                        <p><i class="fas fa-paper-plane"></i> Alerts Sent</p>
+                        <h4 id="alertCount">0</h4>
+                    </div>
+                    <div class="stat-box">
+                        <p><i class="fas fa-triangle-exclamation"></i> Flood Status</p>
+                        <h4 id="floodStatus" style="color:#2e7d32">Normal</h4>
+                    </div>
+                <div class="card">
+                    <h3><i class="fas fa-bolt"></i> Emergency Controls</h3>
+                    <div class="grid">
+                        <button class="control-btn btn-danger" onclick="triggerEmergency()"><i class="fas fa-triangle-exclamation"></i> Activate Emergency Mode</button>
+                        <button class="control-btn btn-warning" onclick="sendTestAlert()"><i class="fas fa-bell"></i> Send Test Alert</button>
+                        <button class="control-btn btn-success" onclick="exportAllData()"><i class="fas fa-download"></i> Export Flood Data</button>
+                        <button class="control-btn" onclick="clearHistory()"><i class="fas fa-trash"></i> Clear History</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-1">
+                <div class="card">
+                    <h3><i class="fas fa-comment-sms"></i> SMS Flood Alert Blast</h3>
+                    <textarea id="smsMessage" rows="5">ALERTO SA BAHA: Kasalukuyang nasa WARNING level ang tubig sa Mamatid River. Maghanda sa posibleng paglikas. - Brgy. Mamatid</textarea>
+                    <select id="smsTarget">
+                        <option value="all">Lahat ng Residente (1,234 numbers)</option>
+                        <option value="critical">Mga malapit sa ilog lang (456 numbers)</option>
+                        <option value="officials">Barangay Officials lang (15 numbers)</option>
+                    </select>
+                    <button class="control-btn btn-danger" onclick="sendSMSBlast()"><i class="fas fa-paper-plane"></i> Send Flood Alert Now</button>
+                    <p style="margin-top:18px;font-size:0.9rem;color:#666"><i class="fas fa-circle-info"></i> Magse-send lang ng SMS pag nasa Warning o Critical level ang tubig.</p>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-2">
+                <div class="card">
+                    <h3><i class="fas fa-sliders"></i> Manual Water Level Override</h3>
+                    <label style="font-weight:600;color:var(--mamatid-blue);display:block;margin-top:10px">Water Level (cm):</label>
+                    <input type="number" id="manualLevel" placeholder="Example: 165">
+                    <label style="font-weight:600;color:var(--mamatid-blue);display:block;margin-top:15px">Flood Status:</label>
+                    <select id="manualStatus">
+                        <option value="Normal">Normal (0-99 cm)</option>
+                        <option value="Warning">Warning (100-149 cm)</option>
+                        <option value="Critical">Critical (150+ cm)</option>
+                    </select>
+                    <button class="control-btn" onclick="setManualData()"><i class="fas fa-floppy-disk"></i> Update Water Level</button>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-gear"></i> Flood Alert Thresholds</h3>
+                    <label style="font-weight:600;color:var(--mamatid-blue)">Warning Level (cm):</label>
+                    <input type="number" id="warningThreshold" value="100">
+                    <label style="font-weight:600;color:var(--mamatid-blue);display:block;margin-top:15px">Critical Level (cm):</label>
+                    <input type="number" id="criticalThreshold" value="150">
+                    <button class="control-btn btn-success" onclick="saveThresholds()"><i class="fas fa-check"></i> Save Thresholds</button>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-3">
+                <div class="card">
+                    <h3><i class="fas fa-clipboard-list"></i> Flood Alert Logs</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Oras</th><th>Action</th><th>Details</th><th>User</th></tr>
+                        </thead>
+                        <tbody id="logsBody">
+                            <tr><td>2026-04-26 20:15</td><td>System Start</td><td>Admin panel accessed</td><td>admin</td></tr>
+                        </tbody>
+                    </table>
+                    <button class="control-btn" onclick="exportLogs()"><i class="fas fa-file-csv"></i> Export Logs to CSV</button>
+                </div>
+            </div>
+
+            <div class="footer-mini">
+                <h5><i class="fas fa-code"></i> System Developers</h5>
+                <div class="dev-names">
+                    <span>CEDRICK M. BARRAMEDA</span>
+                    <span>LALAINE B. ERNESTO</span>
+                    <span>ROXANNE S. SUAREZ</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+var alertCount=0;
+var logs=[{time:'2026-04-26 20:15',action:'System Start',details:'Admin panel accessed',user:'admin'}];
+
+function doLogin(){
+    var user=document.getElementById('username').value;
+    var pass=document.getElementById('password').value;
+    if(user==='admin'&&pass==='mamatid2026'){
+        localStorage.setItem('adminLoggedIn','true');
+        document.getElementById('loginScreen').style.display='none';
+        document.getElementById('dashboard').style.display='block';
+        addLog('Login','Admin logged in','admin');
+        loadAdminData();
+    }else{
+        document.getElementById('error').textContent='Maling username o password';
+        setTimeout(function(){document.getElementById('error').textContent=''},3000);
+    }
+}
+
+function doLogout(){
+    localStorage.removeItem('adminLoggedIn');
+    location.reload();
+}
+
+function showTab(index){
+    var tabs=document.querySelectorAll('.tab');
+    var contents=document.querySelectorAll('.tab-content');
+    for(var i=0;i<tabs.length;i++){
+        if(i===index){
+            tabs[i].classList.add('active');
+            contents[i].classList.add('active');
+        }else{
+            tabs[i].classList.remove('active');
+            contents[i].classList.remove('active');
+        }
+    }
+}
+
+function addLog(action,details,user){
+    var now=new Date().toLocaleString('en-PH',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+    logs.unshift({time:now,action:action,details:details,user:user});
+    renderLogs();
+}
+
+function renderLogs(){
+    var tbody=document.getElementById('logsBody');
+    tbody.innerHTML='';
+    for(var i=0;i<Math.min(logs.length,10);i++){
+        var log=logs[i];
+        tbody.innerHTML+='<tr><td>'+log.time+'</td><td>'+log.action+'</td><td>'+log.details+'</td><td>'+log.user+'</td></tr>';
+    }
+}
+
+function updateFloodStatus(level){
+    var status='Normal';
+    var color='#2e7d32';
+    if(level>=150){status='Critical';color='#c62828';}
+    else if(level>=100){status='Warning';color='#f57c00';}
+    document.getElementById('floodStatus').textContent=status;
+    document.getElementById('floodStatus').style.color=color;
+}
+
+function loadAdminData(){
+    var level=Math.floor(Math.random()*180);
+    document.getElementById('currentLevel').textContent=level+' cm';
+    document.getElementById('alertCount').textContent=alertCount;
+    updateFloodStatus(level);
+    renderLogs();
+}
+
+function sendTestAlert(){
+    alertCount++;
+    alert('✅ Flood test alert na-send na sa lahat ng naka-register na numero!');
+    document.getElementById('alertCount').textContent=alertCount;
+    addLog('Test Alert','Flood alert sent to all','admin');
+}
+
+function exportAllData(){
+    alert('✅ I-eexport na ang water level data sa CSV file...');
+    addLog('Export','Flood data exported','admin');
+}
+
+function clearHistory(){
+    if(confirm('⚠️ Sigurado ka? Buburahin nito ang lahat ng flood history data.')){
+        alert('✅ Nabura na ang lahat ng history!');
+        addLog('Clear History','Flood data deleted','admin');
+    }
+}
+
+function triggerEmergency(){
+    if(confirm('🚨 I-aactivate ang FLOOD EMERGENCY MODE.\n\nMagse-send ng CRITICAL flood alerts sa lahat ng residente.\n\nItuloy?')){
+        alertCount++;
+        alert('🚨 FLOOD EMERGENCY ACTIVATED!\n\nNa-send na ang alerts sa CDRRMO, BFP, PNP');
+        document.getElementById('alertCount').textContent=alertCount;
+        addLog('Emergency','Flood emergency activated','admin');
+    }
+}
+
+function sendSMSBlast(){
+    var msg=document.getElementById('smsMessage').value;
+    var target=document.getElementById('smsTarget').value;
+    if(!msg)return alert('Ilagay ang flood alert message');
+    alertCount++;
+    alert('✅ Flood Alert SMS na-send!\n\nTarget: '+target+'\nMessage: '+msg.substring(0,50)+'...');
+    document.getElementById('alertCount').textContent=alertCount;
+    addLog('SMS Blast','Flood alert sent to '+target,'admin');
+}
+
+function setManualData(){
+    var level=document.getElementById('manualLevel').value;
+    var status=document.getElementById('manualStatus').value;
+    if(!level)return alert('Ilagay ang water level');
+    alert('✅ Na-update na ang Water Level:\n\nLevel: '+level+'cm\nStatus: '+status);
+    document.getElementById('currentLevel').textContent=level+' cm';
+    updateFloodStatus(parseInt(level));
+    addLog('Manual Override','Water level: '+level+'cm '+status,'admin');
+}
+
+function saveThresholds(){
+    var warning=document.getElementById('warningThreshold').value;
+    var critical=document.getElementById('criticalThreshold').value;
+    alert('✅ Na-save na ang flood thresholds:\n\nWarning: '+warning+'cm\nCritical: '+critical+'cm');
+    addLog('Settings','Flood thresholds updated','admin');
+}
+
+function exportLogs(){
+    var csv="Time,Action,Details,User\n";
+    for(var i=0;i<logs.length;i++){
+        var l=logs[i];
+        csv+=l.time+','+l.action+','+l.details+','+l.user+'\n';
+    }
+    var blob=new Blob([csv],{type:'text/csv'});
+    var url=window.URL.createObjectURL(blob);
+    var a=document.createElement('a');a.href=url;a.download='mamatid_flood_logs.csv';a.click();
+    alert('✅ Na-download na ang flood logs CSV!');
+}
+
+window.onload=function(){
+    if(localStorage.getItem('adminLoggedIn')==='true'){
+        document.getElementById('loginScreen').style.display='none';
+        document.getElementById('dashboard').style.display='block';
+        loadAdminData();
+    }
+};
+
+document.addEventListener('keypress',function(e){
+    if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none'){
+        doLogin();
+    }
+});
+</script>
+</body>
+</html>
